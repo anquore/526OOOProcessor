@@ -1,0 +1,18 @@
+README
+
+This code base implements an out of order(OOO) processor based on the P6 architecture described in the links below. A 2-bit branch predictor has also been implemented as part of this system.
+https://compas.cs.stonybrook.edu/course/cse502-s13/lectures/cse502-L7-ooo-and-rename.pdf
+https://compas.cs.stonybrook.edu/course/cse502-s17/cse502-L7-ooo-speculation.pdf
+https://compas.cs.stonybrook.edu/course/cse502-s13/lectures/cse502-L9-ooo-memory.pdf
+
+The instruction set is based off of the ARM instruction set. The following commands have been implemented in the system, AND, XOR, OR, ADDI, ADD, ADDS, SUB, SUBS, B.LT, B.LE, B.GT, B.EQ, B.NE, B.GE, BR, BL, LDUR, STUR, and CBZ. For more details on how the commands are structured review the ARMcommandsheet file. 
+
+This file base has four main folders. What each contains is described below. 
+
+OutOfOrderSystem: This folder contains all the verilog code necessary to compile the OOO processor. The top level file is pipelinedProcessorOOOExtra.sv and it contains the top level module and the top level testbench. Two .do files have been provided that are compatible with the Modelsim 10.5c simulator(though they should work on other versions of ModelSim). Running do runlab.do while in the OutOfOrderSystem folder will compile and run a simulation of the system based on the .arm file loaded into instructmem.sv (more on this later).
+
+InOrderSystem: This folder contains all the verilog code necessary to compile an in order version of the processor(which can be useful for testing). The top level file is pipelinedProcessor.sv and it contains the top level module and the top level testbench. Two .do files have been provided that are compatible with the Modelsim 10.5c simulator(though they should work on other versions of ModelSim). Running do runlab.do while in the InOrderSystem folder will compile and run a simulation of the system based on the .arm file loaded into instructmem.sv (more on this later).
+
+benchmarks: The benchmarks folder contains a set of various benchmarks used to test the functionality of the system. Most of the benchmarks test specific mechanics, modules, or commands in the system but three of them test more recognizable programs. Sort implements a bubble sort algorithm on 10 variables stored in memory, Fibanocci solves for the nth fibanocci number (6 for the version included), and factorizer solves for the factors of a provided number (45 for the version included). To test different benchmarks go into the instructmem.sv file and change the define statement at the top of the file to the program you wish to test. For the .arm files with testX at the front of the name the expected behavior and outputs are described in the files. For the rest of the .arm files the expected outputs are defined in armouts.txt and some information about the program behavior can be found in assemblyMaker.py. For the three randomTestX.arm files the behavior is compared against the InOrder processor. 
+
+programs: The programs folder contains two files. The assemblyMaker.py file contains code that can be used to generate bit files(.arm files) that the processor can then run. To create your own program write it in the main function using the various YCommand functions and then run assemblyMaker.py. The code used to create many of the .arm files is included in the code as comments so those can be used for examples. An important note in making your own code is that branches have delay slots. If this phrase means nothing to you just remember to include the command mathCommand('SUB', SUB, 31, 31, 31, theFile) after every branch. The randomMaker.py program generates random programs for the processor. Running randomMaker.py will create a randomTest.arm file.
